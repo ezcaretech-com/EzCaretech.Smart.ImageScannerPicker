@@ -26,8 +26,6 @@ namespace ImageScannerPicker
 
         IEnumerable<int> Contrasts { get; }
 
-        void SetDelegates(Delegates delegates);
-
         void OpenDeviceSettingWindow();
 
         bool IsDeviceSelected { get; }

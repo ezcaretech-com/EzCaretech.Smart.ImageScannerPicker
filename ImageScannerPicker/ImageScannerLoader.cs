@@ -8,41 +8,41 @@ namespace ImageScannerPicker
 {
     public class ImageScannerLoader
     {
-        public static List<IImageScannerPlugin> Plugins { get; set; }
+        private static List<Type> plugIns = new List<Type>();
 
-        public static IImageScannerPlugin GetPlugin(string name, Delegates delegates, string license = "")
+        public static List<string> PlugIns => plugIns.Select(x => x.Name).ToList();
+
+        public static IImageScannerPlugin GetPlugin(string name, ImageScannerConfig config)
         {
-            IImageScannerPlugin plugin = Plugins.Where(p => p.Name == name).FirstOrDefault();
+            if (config == null)
+            {
+                throw new ArgumentNullException(nameof(config));
+            }
 
-            plugin?.SetDelegates(delegates);
+            Type plugInType = plugIns.FirstOrDefault(type => type.Name == name);
 
-            return plugin ?? throw new Exception($"No plugin found with name '{name}'");
+            IImageScannerPlugin plugIn = (IImageScannerPlugin)Activator.CreateInstance(
+                plugInType ?? throw new Exception($"No plugin found with name '{name}'"), config);
+
+            return plugIn;
         }
 
-        public void LoadPlugins(string path)
-        {
-            Plugins = new List<IImageScannerPlugin>();
-
-            LoadPluginAssemblyFile(path);
-
-            LoadPluginInstance();
-        }
-
-        void LoadPluginAssemblyFile(string path) =>
-            Directory.GetFiles(path).ToList()
-                .Where(file =>
-                {
-                    string fileName = Path.GetFileName(file);
-                    return fileName.StartsWith("ImageScannerPicker.") && fileName.EndsWith("Adaptor.dll");
-                })
-                .ToList()
-                .ForEach(file => Assembly.LoadFile(Path.GetFullPath(file)));
-
-        private void LoadPluginInstance() =>
-            AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(a => a.GetTypes())
-                .Where(p => typeof(IImageScannerPlugin).IsAssignableFrom(p) && p.IsClass)
-                .ToList()
-                .ForEach(type => Plugins.Add((IImageScannerPlugin)Activator.CreateInstance(type)));
+        public void LoadPluginAssemblies(string path)
+            => Directory
+            .GetFiles(path)
+            .ToList()
+            .Where(
+                fileName =>
+                Path.GetFileName(fileName).StartsWith("ImageScannerPicker.") &&
+                Path.GetFileName(fileName).EndsWith("Adaptor.dll"))
+            .ToList()
+            .Select(
+                fileName =>
+                Assembly.LoadFile(Path.GetFullPath(fileName)))
+            .SelectMany(assembly => assembly.GetTypes())
+            .Where(p => typeof(IImageScannerPlugin).IsAssignableFrom(p) && p.IsClass)
+            .Where(type => !plugIns.Contains(type))
+            .ToList()
+            .ForEach(type => plugIns.Add(type));
     }
 }

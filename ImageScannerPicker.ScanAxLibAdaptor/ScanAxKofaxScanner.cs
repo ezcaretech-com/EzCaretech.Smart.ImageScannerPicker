@@ -83,12 +83,17 @@ namespace ImageScannerPicker.Adaptor
 
         public IEnumerable<int> Contrasts => throw new NotImplementedException();
 
-        private Delegates delegates = null;
-        private readonly KScanAxControl kScanAxControl = new KScanAxControl();
+        private readonly ImageScannerConfig _config;
+
+        private readonly KScanAxControl kScanAxControl;
+
         private string filePath = null;
 
-        public ScanAxKofaxScanner()
+        public ScanAxKofaxScanner(ImageScannerConfig config)
         {
+            _config = config;
+
+            kScanAxControl = new KScanAxControl();
             kScanAxControl.Config();
 
             kScanAxControl.axKScan.BatchStart += new EventHandler(this.KScan_BatchStart);
@@ -107,11 +112,6 @@ namespace ImageScannerPicker.Adaptor
             kScanAxControl.axKScan.PageDone -= new AxKScanLib._DKScanEvents_PageDoneEventHandler(this.KScan_PageDone);
             kScanAxControl.axKScan.BatchEnd -= new EventHandler(this.KScan_BatchEnd);
             kScanAxControl.axKScan.ErrorEvent -= new AxKScanLib._DKScanEvents_ErrorEventHandler(this.KScan_ErrorEvent);
-        }
-
-        public void SetDelegates(Delegates delegates)
-        {
-            this.delegates = delegates;
         }
 
         public void OpenDeviceSettingWindow()
@@ -155,29 +155,29 @@ namespace ImageScannerPicker.Adaptor
 
         #region Scan SDK Interface
 
-        private void KScan_BatchStart(object sender, EventArgs e) => delegates?.WillBatchDelegate?.Invoke();
+        private void KScan_BatchStart(object sender, EventArgs e) => _config.WillBatchDelegate?.Invoke();
 
-        private void KScan_PageStart(object sender, EventArgs e) => delegates?.WillPageScanDelegate?.Invoke();
+        private void KScan_PageStart(object sender, EventArgs e) => _config.WillPageScanDelegate?.Invoke();
 
         private void KScan_PageEnd(object sender, EventArgs e)
         {
             try
             {
-                delegates?.DidPageScanDelegate?.Invoke();
+                _config.DidPageScanDelegate?.Invoke();
 
                 filePath = Path.GetTempFileName();
                 kScanAxControl.axKScan.PEFileName = filePath;
             }
             catch (Exception ex)
             {
-                delegates?.ErrorDelegate?.Invoke(ex);
+                _config.ErrorDelegate?.Invoke(ex);
             }
         }
 
         private void KScan_PageDone(object sender, _DKScanEvents_PageDoneEvent e)
         {
             kScanAxControl.axKScan.Refresh();
-            delegates?.DonePageScanDelegate?.Invoke(filePath);
+            _config.DonePageScanDelegate?.Invoke(filePath);
 
             //스캔 소스가 평판인 경우
             //한장만 스캔 하기 위함
@@ -189,7 +189,7 @@ namespace ImageScannerPicker.Adaptor
         }
 
         private void KScan_BatchEnd(object sender, EventArgs e) =>
-            delegates?.DidBatchDelegate?.Invoke();
+            _config.DidBatchDelegate?.Invoke();
 
         private void KScan_ErrorEvent(object sender, _DKScanEvents_ErrorEvent e)
         {
@@ -207,7 +207,7 @@ namespace ImageScannerPicker.Adaptor
                 else if (e.nError == 20026)
                 {
                     string errorMessage = Resources.ResourceManager.GetString("MSG_PaperJam", CultureInfo.CurrentCulture);
-                    delegates?.ErrorDelegate?.Invoke(new Exception(errorMessage));
+                    _config.ErrorDelegate?.Invoke(new Exception(errorMessage));
                 }
             }
         }

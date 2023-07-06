@@ -2,6 +2,8 @@
 {
     public class ScanOptions
     {
+        public string DeviceName { get; set; }
+
         public DeviceMethod DeviceMethod { get; set; }
 
         public ColorSet ColorSet { get; set; }
