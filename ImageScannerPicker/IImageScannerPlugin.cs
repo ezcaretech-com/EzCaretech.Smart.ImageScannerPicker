@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace ImageScannerPicker
 {
-    public interface IImageScannerPlugin
+    public interface IImageScannerPlugin : IDisposable
     {
         string Name { get; }
 

@@ -252,5 +252,10 @@ namespace ImageScannerPicker.Adaptor
             _config.ErrorDelegate?.Invoke(new Exception("Scan Error"));
 
         #endregion
+
+        public void Dispose()
+        {
+            _twainManager.Dispose();
+        }
     }
 }
