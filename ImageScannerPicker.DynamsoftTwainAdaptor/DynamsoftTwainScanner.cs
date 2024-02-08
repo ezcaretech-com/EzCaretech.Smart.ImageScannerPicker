@@ -94,6 +94,10 @@ namespace ImageScannerPicker.Adaptor
         public string GetDeviceNameSelected =>
             _twainManager.CurrentSourceName;
 
+        public bool IfGetImageInfo => true;
+
+        public bool IfGetExtImageInfo => true;
+
         public IEnumerable<string> GetDeviceList()
         {
             List<string> list = new List<string>();
@@ -221,10 +225,11 @@ namespace ImageScannerPicker.Adaptor
             return true;
         }
 
-        public bool OnPostTransfer(Bitmap bit)
+        public bool OnPostTransfer(Bitmap bit, string info)
         {
             try
             {
+                Console.WriteLine(info);
                 _config.DidPageScanDelegate?.Invoke();
 
                 string filePath = Path.GetTempFileName();
