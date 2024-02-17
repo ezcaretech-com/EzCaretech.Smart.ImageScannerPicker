@@ -56,19 +56,19 @@ namespace ImageScannerPicker.Adaptor
 
         public IEnumerable<RotateDegree> RotateDegrees => throw new NotImplementedException();
 
-        public IEnumerable<Dpi> Dpis =>
-            new List<Dpi>
+        public IEnumerable<Resolution> Resolutions =>
+            new List<Resolution>
             {
-                Dpi.D75,
-                Dpi.D100,
-                Dpi.D150,
-                Dpi.D180,
-                Dpi.D200,
-                Dpi.D240,
-                Dpi.D300,
-                Dpi.D360,
-                Dpi.D400,
-                Dpi.D600,
+                Resolution.D75,
+                Resolution.D100,
+                Resolution.D150,
+                Resolution.D180,
+                Resolution.D200,
+                Resolution.D240,
+                Resolution.D300,
+                Resolution.D360,
+                Resolution.D400,
+                Resolution.D600,
             };
 
         public IEnumerable<int> Brightnesses => Enumerable.Range(-1000, 2001);
@@ -117,7 +117,7 @@ namespace ImageScannerPicker.Adaptor
             SetFeeder(options.Feeder);
             SetDuplex(options.Duplex);
             SetPaperSize(options.PaperSize);
-            SetDpi(options.Dpi);
+            SetResolution(options.Resolution);
             SetBrightness(options.Brightness);
             SetContrast(options.Contrast);
 
@@ -208,7 +208,7 @@ namespace ImageScannerPicker.Adaptor
             }
         }
 
-        private void SetDpi(Dpi value) => _twainManager.Resolution = (float)value;
+        private void SetResolution(Resolution value) => _twainManager.Resolution = (float)value;
 
         private void SetBrightness(int value) => _twainManager.Brightness = value;
 

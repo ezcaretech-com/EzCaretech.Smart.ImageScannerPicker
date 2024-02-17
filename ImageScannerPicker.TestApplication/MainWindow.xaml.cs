@@ -13,432 +13,93 @@ namespace ImageScannerPicker.TestApplication
     /// </summary>
     public partial class MainWindow : Window
     {
-        private IImageScannerPlugin _kofaxPlugin;
-        private IImageScannerPlugin _twainPlugin;
+        private IImageScannerPlugin _selectedPlugin;
         private readonly List<string> _resultFiles = new List<string>();
 
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
 
             LoadPlugins();
-
-            InitKofax();
-            InitTwain();
 
             ResultList.ItemsSource = _resultFiles;
         }
 
-        private void LoadPlugins()
+        #region Windows Events
+
+        private void PluginList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            try
-            {
-                ImageScannerLoader loader = new ImageScannerLoader();
-                loader.LoadPluginAssemblies(AppDomain.CurrentDomain.BaseDirectory);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(string.Format("Plugins couldn't be loaded: {0}", ex.Message));
-                Environment.Exit(0);
-            }
+            OpenPlugin();
         }
 
-        private void InitKofax()
+        private void SetLicenseBtn_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                ImageScannerConfig config = new ImageScannerConfig
-                {
-                    WillBatchDelegate = OnWillBatch,
-                    WillPageScanDelegate = OnWillPageScan,
-                    DidPageScanDelegate = OnDidPageScan,
-                    DonePageScanDelegate = OnDonePageScan,
-                    DidBatchDelegate = OnDidBatch,
-                    ErrorDelegate = OnError,
-                };
-
-                _kofaxPlugin = ImageScannerLoader.GetPlugin("ScanAxKofaxScanner", config);
-            }
-            catch
-            {
-                KofaxSelectScannerBtn.IsEnabled = false;
-                KofaxScanBtn.IsEnabled = false;
-                return;
-            }
-
-            try { _ = _kofaxPlugin?.IsDeviceSelected; }
-            catch { KofaxSelectScannerBtn.IsEnabled = false; }
-
-            //_kofaxPlugin.DeviceMethods
-            //_kofaxPlugin.ColorSets
-            //_kofaxPlugin.Feeders
-            //_kofaxPlugin.Duplexs
-            //_kofaxPlugin.PaperSizes
-            //_kofaxPlugin.RotateDegrees
-            //_kofaxPlugin.Dpis
-            //_kofaxPlugin.Brightnesses
-            //_kofaxPlugin.Contrasts
-            //_kofaxPlugin.IsShowUI
+            OpenPlugin();
         }
 
-        private void InitTwain()
+        private void ScannerList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            try
-            {
-                ImageScannerConfig config = new ImageScannerConfig
-                {
-                    License = TwainLicense.Text,
-                    WillBatchDelegate = OnWillBatch,
-                    WillPageScanDelegate = OnWillPageScan,
-                    DidPageScanDelegate = OnDidPageScan,
-                    DonePageScanDelegate = OnDonePageScan,
-                    DidBatchDelegate = OnDidBatch,
-                    ErrorDelegate = OnError,
-                };
+            if (!(ScannerList.SelectedItem is string deviceName)) return;
+            if (string.IsNullOrEmpty(deviceName)) return;
 
-                _twainPlugin = ImageScannerLoader.GetPlugin("DynamsoftTwainScanner", config);
-            }
-            catch
-            {
-                TwainSelectScannerBtn.IsEnabled = false;
-                TwainScanBtn.IsEnabled = false;
-                return;
-            }
-
-            try
-            {
-                Console.WriteLine($"Device name : {_twainPlugin.GetDeviceNameSelected}");
-            }
-            catch
-            {
-                TwainSelectScannerBtn.IsEnabled = false;
-            }
-
-            InitTwainDevice();
-            InitTwainDeviceMethod();
-            InitTwainColorSet();
-            InitTwainFeeder();
-            InitTwainDuplex();
-            InitTwainPaperSize();
-            InitTwainRotateDegree();
-            InitTwainDpi();
-            InitTwainBrightness();
-            InitTwainContrast();
+            OpenScanner();
         }
 
-        private void InitTwainDevice()
+        private void BrightnessSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            BrightnessLbl.Content = Convert.ToInt32(e.NewValue).ToString();
+        }
+
+        private void ContrastSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            ContrastLbl.Content = Convert.ToInt32(e.NewValue).ToString();
+        }
+
+        private void SelectScannerBtn_Click(object sender, RoutedEventArgs e)
+        {
+            OpenScannerPicker();
+        }
+
+        private void OptionBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void StartScanBtn_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                List<OptionItem> list = new List<OptionItem>();
-
-                foreach (string deviceName in _twainPlugin.GetDeviceList())
+                if (!_selectedPlugin.IsDeviceSelected)
                 {
-                    list.Add(new OptionItem
-                    {
-                        Code = deviceName,
-                        Name = deviceName,
-                    });
+                    OpenScannerPicker();
                 }
 
-                TwainDevice.ItemsSource = list;
-                TwainDevice.DisplayMemberPath = "Name";
-            }
-            catch
-            {
-                TwainDevice.IsEnabled = false;
-            }
-        }
-
-        private void InitTwainDeviceMethod()
-        {
-            try
-            {
-                List<OptionItem> list = new List<OptionItem>();
-
-                foreach (DeviceMethod item in _twainPlugin.DeviceMethods)
-                {
-                    list.Add(new OptionItem
-                    {
-                        Code = item.ToString(),
-                        Name = item.GetName(),
-                    });
-                }
-
-                TwainDeviceMethod.ItemsSource = list;
-                TwainDeviceMethod.DisplayMemberPath = "Name";
-            }
-            catch
-            {
-                TwainDeviceMethod.IsEnabled = false;
-            }
-        }
-
-        private void InitTwainColorSet()
-        {
-            try
-            {
-                List<OptionItem> list = new List<OptionItem>();
-
-                foreach (ColorSet item in _twainPlugin.ColorSets)
-                {
-                    list.Add(new OptionItem
-                    {
-                        Code = item.ToString(),
-                        Name = item.GetName(),
-                    });
-                }
-
-                TwainColorSet.ItemsSource = list;
-                TwainColorSet.DisplayMemberPath = "Name";
-            }
-            catch
-            {
-                TwainColorSet.IsEnabled = false;
-            }
-        }
-
-        private void InitTwainFeeder()
-        {
-            try
-            {
-                List<OptionItem> list = new List<OptionItem>();
-
-                foreach (Feeder item in _twainPlugin.Feeders)
-                {
-                    list.Add(new OptionItem
-                    {
-                        Code = item.ToString(),
-                        Name = item.GetName(),
-                    });
-                }
-
-                TwainFeeder.ItemsSource = list;
-                TwainFeeder.DisplayMemberPath = "Name";
-            }
-            catch
-            {
-                TwainFeeder.IsEnabled = false;
-            }
-        }
-
-        private void InitTwainDuplex()
-        {
-            try
-            {
-                List<OptionItem> list = new List<OptionItem>();
-
-                foreach (Duplex item in _twainPlugin.Duplexes)
-                {
-                    list.Add(new OptionItem
-                    {
-                        Code = item.ToString(),
-                        Name = item.GetName(),
-                    });
-                }
-
-                TwainDuplex.ItemsSource = list;
-                TwainDuplex.DisplayMemberPath = "Name";
-            }
-            catch
-            {
-                TwainDuplex.IsEnabled = false;
-            }
-        }
-
-        private void InitTwainPaperSize()
-        {
-            try
-            {
-                List<OptionItem> list = new List<OptionItem>();
-
-                foreach (PaperSize item in _twainPlugin.PaperSizes)
-                {
-                    list.Add(new OptionItem
-                    {
-                        Code = item.ToString(),
-                        Name = item.GetName(),
-                    });
-                }
-
-                TwainPaperSize.ItemsSource = list;
-                TwainPaperSize.DisplayMemberPath = "Name";
-            }
-            catch
-            {
-                TwainPaperSize.IsEnabled = false;
-            }
-        }
-
-        private void InitTwainRotateDegree()
-        {
-            try
-            {
-                List<OptionItem> list = new List<OptionItem>();
-
-                foreach (RotateDegree item in _twainPlugin.RotateDegrees)
-                {
-                    list.Add(new OptionItem
-                    {
-                        Code = item.ToString(),
-                        Name = item.GetName(),
-                    });
-                }
-
-                TwainRotateDegree.ItemsSource = list;
-                TwainRotateDegree.DisplayMemberPath = "Name";
-            }
-            catch
-            {
-                TwainRotateDegree.IsEnabled = false;
-            }
-        }
-
-        private void InitTwainDpi()
-        {
-            try
-            {
-                List<OptionItem> list = new List<OptionItem>();
-
-                foreach (Dpi item in _twainPlugin.Dpis)
-                {
-                    list.Add(new OptionItem
-                    {
-                        Code = item.ToString(),
-                        Name = item.GetName(),
-                    });
-                }
-
-                TwainDpi.ItemsSource = list;
-                TwainDpi.DisplayMemberPath = "Name";
-            }
-            catch
-            {
-                TwainDpi.IsEnabled = false;
-            }
-        }
-
-        private void InitTwainBrightness()
-        {
-            try
-            {
-                TwainBrightnessLbl.Content = "0";
-                TwainBrightnessSlider.Value = 0;
-                TwainBrightnessSlider.Minimum = _twainPlugin.Brightnesses.Min();
-                TwainBrightnessSlider.Maximum = _twainPlugin.Brightnesses.Max();
-                TwainBrightnessSlider.SmallChange = 10;
-                TwainBrightnessSlider.LargeChange = 100;
-            }
-            catch
-            {
-                TwainBrightnessSlider.IsEnabled = false;
-            }
-        }
-
-        private void InitTwainContrast()
-        {
-            try
-            {
-                TwainContrastLbl.Content = "0";
-                TwainContrastSlider.Value = 0;
-                TwainContrastSlider.Minimum = _twainPlugin.Contrasts.Min();
-                TwainContrastSlider.Maximum = _twainPlugin.Contrasts.Max();
-                TwainContrastSlider.SmallChange = 10;
-                TwainContrastSlider.LargeChange = 100;
-            }
-            catch
-            {
-                TwainContrastSlider.IsEnabled = false;
-            }
-        }
-
-        private void KofaxSelectScannerBtn_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                if (_kofaxPlugin.IsDeviceSelected)
-                {
-                    Console.WriteLine($"Device is selected already: {_kofaxPlugin.GetDeviceNameSelected}");
-                }
-
-                _kofaxPlugin.OpenDeviceSettingWindow();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
-        }
-
-        private void TwainSelectScannerBtn_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                _twainPlugin.OpenDeviceSettingWindow();
-
-                foreach (OptionItem item in TwainDevice.Items)
-                {
-                    if (item.Name.Equals(_twainPlugin.GetDeviceNameSelected))
-                    {
-                        TwainDevice.SelectedItem = item;
-                        break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
-        }
-
-        private void KofaxScanBtn_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                if (!_kofaxPlugin.IsDeviceSelected)
+                if (!_selectedPlugin.IsDeviceSelected)
                     return;
 
-                Console.WriteLine($"Device is selected already: {_kofaxPlugin.GetDeviceNameSelected}");
+                Console.WriteLine($"Device : {_selectedPlugin.GetDeviceNameSelected}");
 
                 ScanOptions options = new ScanOptions();
 
-                _kofaxPlugin.Scan(options);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
-        }
+                if (ScannerList.SelectedItem is string scannerName) options.DeviceName = scannerName;
+                if (DeviceMethod.SelectedItem is OptionItem item1 && Enum.Parse(typeof(DeviceMethod), item1.Code) is DeviceMethod value1) options.DeviceMethod = value1;
+                if (ColorSet.SelectedItem is OptionItem item2 && Enum.Parse(typeof(ColorSet), item2.Code) is ColorSet value2) options.ColorSet = value2;
+                if (Feeder.SelectedItem is OptionItem item3 && Enum.Parse(typeof(Feeder), item3.Code) is Feeder value3) options.Feeder = value3;
+                if (Duplex.SelectedItem is OptionItem item4 && Enum.Parse(typeof(Duplex), item4.Code) is Duplex value4) options.Duplex = value4;
+                if (PaperSize.SelectedItem is OptionItem item5 && Enum.Parse(typeof(PaperSize), item5.Code) is PaperSize value5) options.PaperSize = value5;
+                if (RotateDegree.SelectedItem is OptionItem item6 && Enum.Parse(typeof(RotateDegree), item6.Code) is RotateDegree value6) options.RotateDegree = value6;
+                if (Resolution.SelectedItem is OptionItem item7 && Enum.Parse(typeof(Resolution), item7.Code) is Resolution value7) options.Resolution = value7;
 
-        private void TwainScanBtn_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                if (!_twainPlugin.IsDeviceSelected)
-                {
-                    TwainSelectScannerBtn_Click(sender, e);
-                }
-
-                if (!_twainPlugin.IsDeviceSelected)
-                    return;
-
-                Console.WriteLine($"Device is selected already: {_twainPlugin.GetDeviceNameSelected}");
-
-                ScanOptions options = new ScanOptions();
-
-                if (TwainDevice.SelectedItem is OptionItem item0) options.DeviceName = item0.Name;
-                if (TwainDeviceMethod.SelectedItem is OptionItem item1 && Enum.Parse(typeof(DeviceMethod), item1.Code) is DeviceMethod value1) options.DeviceMethod = value1;
-                if (TwainColorSet.SelectedItem is OptionItem item2 && Enum.Parse(typeof(ColorSet), item2.Code) is ColorSet value2) options.ColorSet = value2;
-                if (TwainFeeder.SelectedItem is OptionItem item3 && Enum.Parse(typeof(Feeder), item3.Code) is Feeder value3) options.Feeder = value3;
-                if (TwainDuplex.SelectedItem is OptionItem item4 && Enum.Parse(typeof(Duplex), item4.Code) is Duplex value4) options.Duplex = value4;
-                if (TwainPaperSize.SelectedItem is OptionItem item5 && Enum.Parse(typeof(PaperSize), item5.Code) is PaperSize value5) options.PaperSize = value5;
-                if (TwainRotateDegree.SelectedItem is OptionItem item6 && Enum.Parse(typeof(RotateDegree), item6.Code) is RotateDegree value6) options.RotateDegree = value6;
-                if (TwainDpi.SelectedItem is OptionItem item7 && Enum.Parse(typeof(Dpi), item7.Code) is Dpi value7) options.Dpi = value7;
-
-                options.Brightness = Convert.ToInt32(TwainBrightnessSlider.Value);
-                options.Contrast = Convert.ToInt32(TwainContrastSlider.Value);
+                options.Brightness = Convert.ToInt32(BrightnessSlider.Value);
+                options.Contrast = Convert.ToInt32(ContrastSlider.Value);
                 options.IsShowUI = TwainShowUI.IsChecked ?? false;
 
-                _twainPlugin.Scan(options);
+                _selectedPlugin.Scan(options);
             }
             catch (Exception ex)
             {
@@ -446,20 +107,26 @@ namespace ImageScannerPicker.TestApplication
             }
         }
 
-        private void TwainBrightnessSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void ResultList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            TwainBrightnessLbl.Content = Convert.ToInt32(e.NewValue).ToString();
+            if (e.Source is ListBox listBox && listBox.SelectedItem is string filePath)
+            {
+                FileInfo fi = new FileInfo(filePath);
+
+                ResultFileImage.Source = new BitmapImage(new Uri(filePath));
+                ResultFilePath.Content = fi.Name;
+                ResultFileSize.Content = fi.Length.ToString("#,##0");
+            }
         }
 
-        private void TwainContrastSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void Window_Closed(object sender, EventArgs e)
         {
-            TwainContrastLbl.Content = Convert.ToInt32(e.NewValue).ToString();
+            Application.Current.Shutdown();
         }
 
-        private void TwainSetLicenseBtn_Click(object sender, RoutedEventArgs e)
-        {
-            InitTwain();
-        }
+        #endregion // End of Window Events
+
+        #region Plugin Events
 
         private void OnWillBatch()
         {
@@ -482,6 +149,7 @@ namespace ImageScannerPicker.TestApplication
             Console.WriteLine($"OnDonePageScan invoked: {filePath}");
             _resultFiles.Add(filePath);
             ResultList.Items.Refresh();
+            ResultList.SelectedIndex = ResultList.Items.Count - 1;
         }
 
         private void OnDidBatch()
@@ -494,21 +162,240 @@ namespace ImageScannerPicker.TestApplication
             Console.WriteLine($"OnError invoked: {ex}");
         }
 
-        private void ResultList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (e.Source is ListBox listBox && listBox.SelectedItem is string filePath)
-            {
-                FileInfo fi = new FileInfo(filePath);
+        #endregion
 
-                ResultFileImage.Source = new BitmapImage(new Uri(filePath));
-                ResultFilePath.Content = fi.Name;
-                ResultFileSize.Content = fi.Length.ToString("#,##0");
+        private void LoadPlugins()
+        {
+            try
+            {
+                ImageScannerLoader loader = new ImageScannerLoader();
+                loader.LoadPluginAssemblies(AppDomain.CurrentDomain.BaseDirectory);
+                PluginList.ItemsSource = ImageScannerLoader.PlugIns;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(string.Format("Plugins couldn't be loaded: {0}", ex.Message));
+                Environment.Exit(0);
             }
         }
 
-        private void Window_Closed(object sender, EventArgs e)
+        private void InitPlugin(string pluginName)
         {
-            Application.Current.Shutdown();
+            try
+            {
+                _selectedPlugin?.Dispose();
+
+                ImageScannerConfig config = new ImageScannerConfig
+                {
+                    License = LicenseTbx.Text,
+                    WillBatchDelegate = OnWillBatch,
+                    WillPageScanDelegate = OnWillPageScan,
+                    DidPageScanDelegate = OnDidPageScan,
+                    DonePageScanDelegate = OnDonePageScan,
+                    DidBatchDelegate = OnDidBatch,
+                    ErrorDelegate = OnError,
+                };
+
+                _selectedPlugin = ImageScannerLoader.GetPlugin(pluginName, config);
+
+                SelectScannerBtn.IsEnabled = true;
+            }
+            catch
+            {
+                SelectScannerBtn.IsEnabled = false;
+                return;
+            }
+        }
+
+        private void OpenPlugin()
+        {
+            if (!(PluginList.SelectedItem is string pluginName)) return;
+            if (string.IsNullOrEmpty(pluginName)) return;
+
+            PluginName.Content = pluginName;
+            InitPlugin(pluginName);
+            InitScannerDevice();
+        }
+
+        private void OpenScannerPicker()
+        {
+            try
+            {
+                _selectedPlugin.OpenDeviceSettingWindow();
+
+                if (_selectedPlugin.IsDeviceSelected)
+                {
+                    ScannerList.SelectedItem = _selectedPlugin.GetDeviceNameSelected;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+        }
+
+        private void OpenScanner()
+        {
+            InitDeviceMethod();
+            InitColorSet();
+            InitFeeder();
+            InitDuplex();
+            InitPaperSize();
+            InitRotateDegree();
+            InitResolution();
+            InitBrightness();
+            InitContrast();
+
+            OptionsStackPanel.IsEnabled = true;
+            OptionBtn.IsEnabled = true;
+            StartScanBtn.IsEnabled = true;
+        }
+
+        private void InitScannerDevice()
+        {
+            ScannerList.ItemsSource = _selectedPlugin.GetDeviceList();
+        }
+
+        private void InitDeviceMethod()
+        {
+            try
+            {
+                DeviceMethod.ItemsSource = _selectedPlugin.DeviceMethods
+                    .Select(item => new OptionItem { Code = item.ToString(), Name = item.GetName() })
+                    .ToList();
+            }
+            catch
+            {
+                DeviceMethod.IsEnabled = false;
+            }
+        }
+
+        private void InitColorSet()
+        {
+            try
+            {
+                var list = _selectedPlugin.ColorSets
+                    .Select(item => new OptionItem { Code = item.ToString(), Name = item.GetName() })
+                    .ToList();
+                ColorSet.ItemsSource = list;
+                ColorSet.SelectedItem = list.FirstOrDefault(x => x.Name == "Color");
+            }
+            catch
+            {
+                ColorSet.IsEnabled = false;
+            }
+        }
+
+        private void InitFeeder()
+        {
+            try
+            {
+                var list = _selectedPlugin.Feeders
+                    .Select(item => new OptionItem { Code = item.ToString(), Name = item.GetName() })
+                    .ToList();
+                Feeder.ItemsSource = list;
+                Feeder.SelectedItem = list.FirstOrDefault(x => x.Name == "ADF");
+            }
+            catch
+            {
+                Feeder.IsEnabled = false;
+            }
+        }
+
+        private void InitDuplex()
+        {
+            try
+            {
+                var list = _selectedPlugin.Duplexes
+                    .Select(item => new OptionItem { Code = item.ToString(), Name = item.GetName() })
+                    .ToList();
+                Duplex.ItemsSource = list;
+                Duplex.SelectedItem = list.FirstOrDefault(x => x.Name == "Single");
+            }
+            catch
+            {
+                Duplex.IsEnabled = false;
+            }
+        }
+
+        private void InitPaperSize()
+        {
+            try
+            {
+                var list = _selectedPlugin.PaperSizes
+                    .Select(item => new OptionItem { Code = item.ToString(), Name = item.GetName() })
+                    .ToList();
+                PaperSize.ItemsSource = list;
+                PaperSize.SelectedItem = list.FirstOrDefault(x => x.Name == "A4");
+            }
+            catch
+            {
+                PaperSize.IsEnabled = false;
+            }
+        }
+
+        private void InitRotateDegree()
+        {
+            try
+            {
+                RotateDegree.ItemsSource = _selectedPlugin.RotateDegrees
+                    .Select(item => new OptionItem { Code = item.ToString(), Name = item.GetName() })
+                    .ToList();
+            }
+            catch
+            {
+                RotateDegree.IsEnabled = false;
+            }
+        }
+
+        private void InitResolution()
+        {
+            try
+            {
+                var list = _selectedPlugin.Resolutions
+                    .Select(item => new OptionItem { Code = item.ToString(), Name = item.GetName() })
+                    .ToList();
+                Resolution.ItemsSource = list;
+                Resolution.SelectedItem = list.FirstOrDefault(x => x.Name == "200");
+            }
+            catch
+            {
+                Resolution.IsEnabled = false;
+            }
+        }
+
+        private void InitBrightness()
+        {
+            try
+            {
+                BrightnessLbl.Content = "0";
+                BrightnessSlider.Value = 0;
+                BrightnessSlider.Minimum = _selectedPlugin.Brightnesses.Min();
+                BrightnessSlider.Maximum = _selectedPlugin.Brightnesses.Max();
+                BrightnessSlider.SmallChange = 10;
+                BrightnessSlider.LargeChange = 100;
+            }
+            catch
+            {
+                BrightnessSlider.IsEnabled = false;
+            }
+        }
+
+        private void InitContrast()
+        {
+            try
+            {
+                ContrastLbl.Content = "0";
+                ContrastSlider.Value = 0;
+                ContrastSlider.Minimum = _selectedPlugin.Contrasts.Min();
+                ContrastSlider.Maximum = _selectedPlugin.Contrasts.Max();
+                ContrastSlider.SmallChange = 10;
+                ContrastSlider.LargeChange = 100;
+            }
+            catch
+            {
+                ContrastSlider.IsEnabled = false;
+            }
         }
     }
 }
