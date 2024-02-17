@@ -5,97 +5,118 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ImageScannerPicker.TestApplication"
         mc:Ignorable="d"
-        Title="MainWindow" Height="550" Width="890" Closed="Window_Closed">
+        Title="MainWindow" Height="680" Width="980" Closed="Window_Closed" WindowState="Maximized">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*" MinWidth="240"/>
-            <ColumnDefinition Width="1*" MinWidth="240"/>
+            <ColumnDefinition Width="260"/>
+            <ColumnDefinition Width="260" MinWidth="320"/>
             <ColumnDefinition Width="1*" MinWidth="320"/>
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="0" Margin="10">
-            <Label Content="KOFAX" FontSize="18" FontWeight="Bold"/>
-            <Label Content="Actions" FontWeight="Bold" Margin="0,10,0,0"/>
-            <Separator Margin="0,0,0,10"/>
-            <Button x:Name="KofaxSelectScannerBtn" Content="Select Scanner" Click="KofaxSelectScannerBtn_Click"/>
-            <Button x:Name="KofaxScanBtn" Content="Start Scan" Click="KofaxScanBtn_Click"/>
-            <Label Content="Options" FontWeight="Bold" Margin="0,10,0,0"/>
-            <Separator Margin="0,0,0,10"/>
-        </StackPanel>
-        <StackPanel Grid.Column="1" Margin="10">
-            <Label Content="TWAIN" FontSize="18" FontWeight="Bold"/>
-            <Label Content="Actions" FontWeight="Bold" Margin="0,10,0,0"/>
-            <Separator Margin="0,0,0,10"/>
-            <Button x:Name="TwainSelectScannerBtn" Content="Select Scanner" Click="TwainSelectScannerBtn_Click"/>
-            <Button x:Name="TwainScanBtn" Content="Start Scan" Click="TwainScanBtn_Click"/>
-            <Label Content="Options" FontWeight="Bold" Margin="0,10,0,0"/>
-            <Separator Margin="0,0,0,10"/>
+        <DockPanel Grid.Column="0" Margin="10">
+            <Label DockPanel.Dock="Top" Content="Plugins" FontWeight="Bold" Margin="0,0,0,0" FontSize="18"/>
             <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*" MinWidth="120"/>
-                    <ColumnDefinition Width="3*"/>
-                    <ColumnDefinition Width="60"/>
-                </Grid.ColumnDefinitions>
-                
                 <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
-
-                <Label Grid.Row="0" Grid.Column="0" Content="Device"/>
-                <ComboBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" x:Name="TwainDevice"/>
-
-                <Label Grid.Row="1" Grid.Column="0" Content="DeviceMethod"/>
-                <ComboBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" x:Name="TwainDeviceMethod"/>
-
-                <Label Grid.Row="2" Grid.Column="0" Content="ColorSet"/>
-                <ComboBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" x:Name="TwainColorSet"/>
-
-                <Label Grid.Row="3" Grid.Column="0" Content="Feeder"/>
-                <ComboBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" x:Name="TwainFeeder"/>
-
-                <Label Grid.Row="4" Grid.Column="0" Content="Duplex"/>
-                <ComboBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" x:Name="TwainDuplex"/>
-
-                <Label Grid.Row="5" Grid.Column="0" Content="PaperSize"/>
-                <ComboBox Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" x:Name="TwainPaperSize"/>
-
-                <Label Grid.Row="6" Grid.Column="0" Content="RotateDegree"/>
-                <ComboBox Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" x:Name="TwainRotateDegree"/>
-
-                <Label Grid.Row="7" Grid.Column="0" Content="Dpi"/>
-                <ComboBox Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" x:Name="TwainDpi"/>
-
-                <Label Grid.Row="8" Grid.Column="0" Content="Brightness"/>
-                <Slider Grid.Row="8" Grid.Column="1" x:Name="TwainBrightnessSlider" ValueChanged="TwainBrightnessSlider_ValueChanged"/>
-                <Label Grid.Row="8" Grid.Column="2" x:Name="TwainBrightnessLbl"/>
-
-                <Label Grid.Row="9" Grid.Column="0" Content="Contrast"/>
-                <Slider Grid.Row="9" Grid.Column="1" x:Name="TwainContrastSlider" ValueChanged="TwainContrastSlider_ValueChanged"/>
-                <Label Grid.Row="9" Grid.Column="2" x:Name="TwainContrastLbl"/>
-
-                <Label Grid.Row="10" Grid.Column="0" Content="ShowUI"/>
-                <CheckBox Grid.Row="10" Grid.Column="1" x:Name="TwainShowUI"/>
-
-                <Label Grid.Row="11" Grid.Column="0" Content="License"/>
-                <TextBox Grid.Row="11" Grid.Column="1" x:Name="TwainLicense" Width="Auto"/>
-                <Button Grid.Row="11" Grid.Column="2" Content="Set" Click="TwainSetLicenseBtn_Click"/>
+                <DockPanel Grid.Row="0">
+                    <Label DockPanel.Dock="Top" Content="Select plugin :" FontWeight="Bold" Margin="0,10,0,0"/>
+                    <Separator DockPanel.Dock="Top" Margin="0,0,0,5"/>
+                    <Border DockPanel.Dock="Bottom">
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="License :" FontWeight="Bold" Margin="0,10,0,0"/>
+                            <Separator Margin="0,0,0,5"/>
+                            <TextBox x:Name="LicenseTbx" MaxHeight="60" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" />
+                            <Button Content="Set" Click="SetLicenseBtn_Click"/>
+                        </StackPanel>
+                    </Border>
+                    <ListBox x:Name="PluginList" SelectionMode="Single" SelectionChanged="PluginList_SelectionChanged"/>
+                </DockPanel>
+                <DockPanel Grid.Row="1">
+                    <Label DockPanel.Dock="Top" Content="Select scanner :" FontWeight="Bold" Margin="0,10,0,0"/>
+                    <Separator DockPanel.Dock="Top" Margin="0,0,0,5"/>
+                    <ListBox x:Name="ScannerList" SelectionMode="Single" SelectionChanged="ScannerList_SelectionChanged"/>
+                </DockPanel>
             </Grid>
-        </StackPanel>
-        <StackPanel Grid.Column="2" Margin="10">
-            <Image x:Name="ResultFileImage" Width="300" Height="300" />
-            <Label x:Name="ResultFilePath"/>
-            <Label x:Name="ResultFileSize"/>
-            <ListBox x:Name="ResultList" MinHeight="120" SelectionChanged="ResultList_SelectionChanged"/>
-        </StackPanel>
+        </DockPanel>
+        <DockPanel Grid.Column="1" Margin="10">
+            <StackPanel DockPanel.Dock="Top">
+                <Label x:Name="PluginName" Content="Plugin Name" FontWeight="Bold" Margin="0,0,0,0" FontSize="18"/>
+                <Label Content="Actions" FontWeight="Bold" Margin="0,10,0,0"/>
+                <Separator Margin="0,0,0,5"/>
+                <Button x:Name="SelectScannerBtn" Content="Select Scanner" Margin="0,2,0,2" IsEnabled="False" Click="SelectScannerBtn_Click"/>
+                <Button x:Name="OptionBtn" Content="Option" Margin="0,2,0,2" IsEnabled="False" Click="OptionBtn_Click"/>
+                <Button x:Name="StartScanBtn" Content="Start Scan" Margin="0,2,0,2" IsEnabled="False" Click="StartScanBtn_Click"/>
+                <Label Content="Options" FontWeight="Bold" Margin="0,10,0,0"/>
+                <Separator Margin="0,0,0,5"/>
+            </StackPanel>
+            <StackPanel DockPanel.Dock="Top" x:Name="OptionsStackPanel" IsEnabled="False">
+                <DockPanel Margin="0,2,0,2">
+                    <Label DockPanel.Dock="Left" Content="DeviceMethod" MinWidth="120"/>
+                    <ComboBox x:Name="DeviceMethod" DisplayMemberPath="Name"/>
+                </DockPanel>
+                <DockPanel Margin="0,2,0,2">
+                    <Label DockPanel.Dock="Left" Content="ColorSet" MinWidth="120"/>
+                    <ComboBox x:Name="ColorSet" DisplayMemberPath="Name"/>
+                </DockPanel>
+                <DockPanel Margin="0,2,0,2">
+                    <Label DockPanel.Dock="Left" Content="Feeder" MinWidth="120"/>
+                    <ComboBox x:Name="Feeder" DisplayMemberPath="Name"/>
+                </DockPanel>
+                <DockPanel Margin="0,2,0,2">
+                    <Label DockPanel.Dock="Left" Content="Duplex" MinWidth="120"/>
+                    <ComboBox x:Name="Duplex" DisplayMemberPath="Name"/>
+                </DockPanel>
+                <DockPanel Margin="0,2,0,2">
+                    <Label DockPanel.Dock="Left" Content="PaperSize" MinWidth="120"/>
+                    <ComboBox x:Name="PaperSize" DisplayMemberPath="Name"/>
+                </DockPanel>
+                <DockPanel Margin="0,2,0,2">
+                    <Label DockPanel.Dock="Left" Content="RotateDegree" MinWidth="120"/>
+                    <ComboBox x:Name="RotateDegree" DisplayMemberPath="Name"/>
+                </DockPanel>
+                <DockPanel Margin="0,2,0,2">
+                    <Label DockPanel.Dock="Left" Content="Resolution" MinWidth="120"/>
+                    <ComboBox x:Name="Resolution" DisplayMemberPath="Name"/>
+                </DockPanel>
+                <DockPanel Margin="0,2,0,2">
+                    <Label DockPanel.Dock="Left" Content="Brightness" MinWidth="120"/>
+                    <Label DockPanel.Dock="Right" x:Name="BrightnessLbl" Width="48" HorizontalContentAlignment="Right"/>
+                    <Slider x:Name="BrightnessSlider" VerticalAlignment="Center" ValueChanged="BrightnessSlider_ValueChanged"/>
+                </DockPanel>
+                <DockPanel Margin="0,2,0,2">
+                    <Label DockPanel.Dock="Left" Content="Contrast" MinWidth="120"/>
+                    <Label DockPanel.Dock="Right" x:Name="ContrastLbl" Width="48" HorizontalContentAlignment="Right"/>
+                    <Slider x:Name="ContrastSlider" VerticalAlignment="Center" ValueChanged="ContrastSlider_ValueChanged"/>
+                </DockPanel>
+                <DockPanel Margin="0,2,0,2">
+                    <Label DockPanel.Dock="Left" Content="ShowUI" MinWidth="120"/>
+                    <CheckBox x:Name="TwainShowUI" VerticalAlignment="Center"/>
+                </DockPanel>
+            </StackPanel>
+            <StackPanel DockPanel.Dock="Top">
+                <Label Content="Results" FontWeight="Bold" Margin="0,10,0,0"/>
+                <Separator Margin="0,0,0,5"/>
+            </StackPanel>
+            <ListView x:Name="ResultList" Margin="0,2,0,2" SelectionMode="Single" SelectionChanged="ResultList_SelectionChanged" />
+        </DockPanel>
+        <DockPanel Grid.Column="2" Margin="10">
+            <StackPanel DockPanel.Dock="Top">
+                <Label Content="Viewer" FontWeight="Bold" Margin="0,0,0,0" FontSize="18"/>
+                <Label Content="Info" FontWeight="Bold" Margin="0,10,0,0"/>
+                <Separator Margin="0,0,0,5"/>
+                <DockPanel Margin="0,2,0,2">
+                    <Label DockPanel.Dock="Left" Content="FileName" MinWidth="120"/>
+                    <Label x:Name="ResultFilePath"/>
+                </DockPanel>
+                <DockPanel Margin="0,2,0,2">
+                    <Label DockPanel.Dock="Left" Content="FileSize" MinWidth="120"/>
+                    <Label x:Name="ResultFileSize"/>
+                </DockPanel>
+                <Label Content="Image" FontWeight="Bold" Margin="0,10,0,0"/>
+                <Separator Margin="0,0,0,5"/>
+            </StackPanel>
+            <Image x:Name="ResultFileImage"/>
+        </DockPanel>
     </Grid>
 </Window>

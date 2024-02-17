@@ -16,7 +16,7 @@
 
         public RotateDegree RotateDegree { get; set; }
 
-        public Dpi Dpi { get; set; }
+        public Resolution Resolution { get; set; }
 
         public int Brightness { get; set; }
 

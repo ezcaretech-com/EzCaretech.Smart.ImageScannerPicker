@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace ImageScannerPicker
 {
-    public enum Dpi
+    public enum Resolution
     {
         D75 = 75,
         D100 = 100,
@@ -17,9 +17,9 @@ namespace ImageScannerPicker
         D600 = 600,
     }
 
-    public static class DpiExtension
+    public static class ResolutionExtension
     {
-        public static string GetName(this Dpi dpi) =>
-            ((int)dpi).ToString();
+        public static string GetName(this Resolution resolution) =>
+            ((int)resolution).ToString();
     }
 }

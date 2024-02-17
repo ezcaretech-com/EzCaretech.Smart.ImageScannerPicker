@@ -64,19 +64,19 @@ namespace ImageScannerPicker.Adaptor
                 RotateDegree.D270,
             };
 
-        public IEnumerable<Dpi> Dpis =>
-            new List<Dpi>
+        public IEnumerable<Resolution> Resolutions =>
+            new List<Resolution>
             {
-                Dpi.D75,
-                Dpi.D100,
-                Dpi.D150,
-                Dpi.D180,
-                Dpi.D200,
-                Dpi.D240,
-                Dpi.D300,
-                Dpi.D360,
-                Dpi.D400,
-                Dpi.D600,
+                Resolution.D75,
+                Resolution.D100,
+                Resolution.D150,
+                Resolution.D180,
+                Resolution.D200,
+                Resolution.D240,
+                Resolution.D300,
+                Resolution.D360,
+                Resolution.D400,
+                Resolution.D600,
             };
 
         public IEnumerable<int> Brightnesses => Enumerable.Range(1, 8);
@@ -126,8 +126,11 @@ namespace ImageScannerPicker.Adaptor
         public string GetDeviceNameSelected =>
             kScanAxControl.axKScan.DeviceAlias;
 
-        public IEnumerable<string> GetDeviceList() =>
-            throw new NotImplementedException();
+        public IEnumerable<string> GetDeviceList()
+        {
+            OpenDeviceSettingWindow();
+            return new List<string> { GetDeviceNameSelected };
+        }
 
         public void Scan(ScanOptions options)
         {
@@ -138,7 +141,7 @@ namespace ImageScannerPicker.Adaptor
                 .SetDuplex(options.Duplex)
                 .SetPaperSize(options.PaperSize)
                 .SetRotateDegree(options.RotateDegree)
-                .SetDpi(options.Dpi)
+                .SetResolution(options.Resolution)
                 .SetBrightness(options.Brightness)
                 .SetContrast(options.Contrast);
 
@@ -348,38 +351,38 @@ namespace ImageScannerPicker.Adaptor
             return ctrl;
         }
 
-        public static KScanAxControl SetDpi(this KScanAxControl ctrl, Dpi value)
+        public static KScanAxControl SetResolution(this KScanAxControl ctrl, Resolution value)
         {
             switch (value)
             {
-                case Dpi.D75:
+                case Resolution.D75:
                     ctrl.axKScan.ScanDpi = (int)enumKGContants.KGDPI75;
                     break;
-                case Dpi.D100:
+                case Resolution.D100:
                     ctrl.axKScan.ScanDpi = (int)enumKGContants.KGDPI100;
                     break;
-                case Dpi.D150:
+                case Resolution.D150:
                     ctrl.axKScan.ScanDpi = (int)enumKGContants.KGDPI150;
                     break;
-                case Dpi.D180:
+                case Resolution.D180:
                     ctrl.axKScan.ScanDpi = (int)enumKGContants.KGDPI180;
                     break;
-                case Dpi.D200:
+                case Resolution.D200:
                     ctrl.axKScan.ScanDpi = (int)enumKGContants.KGDPI200;
                     break;
-                case Dpi.D240:
+                case Resolution.D240:
                     ctrl.axKScan.ScanDpi = (int)enumKGContants.KGDPI240;
                     break;
-                case Dpi.D300:
+                case Resolution.D300:
                     ctrl.axKScan.ScanDpi = (int)enumKGContants.KGDPI300;
                     break;
-                case Dpi.D360:
+                case Resolution.D360:
                     ctrl.axKScan.ScanDpi = (int)enumKGContants.KGDPI360;
                     break;
-                case Dpi.D400:
+                case Resolution.D400:
                     ctrl.axKScan.ScanDpi = (int)enumKGContants.KGDPI400;
                     break;
-                case Dpi.D600:
+                case Resolution.D600:
                     ctrl.axKScan.ScanDpi = (int)enumKGContants.KGDPI600;
                     break;
             }
