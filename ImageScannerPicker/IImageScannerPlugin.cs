@@ -21,7 +21,7 @@ namespace ImageScannerPicker
 
         IEnumerable<RotateDegree> RotateDegrees { get; }
 
-        IEnumerable<Dpi> Dpis { get; }
+        IEnumerable<Resolution> Resolutions { get; }
 
         IEnumerable<int> Brightnesses { get; }
 
