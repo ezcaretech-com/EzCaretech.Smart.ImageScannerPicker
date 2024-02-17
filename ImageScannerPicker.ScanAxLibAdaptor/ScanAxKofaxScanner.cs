@@ -114,22 +114,31 @@ namespace ImageScannerPicker.Adaptor
             kScanAxControl.axKScan.ErrorEvent -= new AxKScanLib._DKScanEvents_ErrorEventHandler(this.KScan_ErrorEvent);
         }
 
-        public void OpenDeviceSettingWindow()
+        public bool IsDataSourceOpened =>
+            kScanAxControl.axKScan.DeviceReserved;
+
+        public string SelectedDataSourceName =>
+            kScanAxControl.axKScan.DeviceAlias;
+
+        public void ShowSourceSelector()
         {
             kScanAxControl.axKScan.ActiveDialog = enumActiveDialog.KSDIALOGDEVICESETTINGS;
             kScanAxControl.axKScan.Action = enumAction.KSACTIONOPENDIALOG;
         }
 
-        public bool IsDeviceSelected =>
-            kScanAxControl.axKScan.DeviceReserved;
-
-        public string GetDeviceNameSelected =>
-            kScanAxControl.axKScan.DeviceAlias;
-
-        public IEnumerable<string> GetDeviceList()
+        public void ShowSettingUI()
         {
-            OpenDeviceSettingWindow();
-            return new List<string> { GetDeviceNameSelected };
+        }
+
+        public void SetDataSource(string dataSourceName)
+        {
+
+        }
+
+        public IEnumerable<string> DataSourceList()
+        {
+            ShowSettingUI();
+            return new List<string> { SelectedDataSourceName };
         }
 
         public void Scan(ScanOptions options)
@@ -154,6 +163,11 @@ namespace ImageScannerPicker.Adaptor
 
             kScanAxControl.axKScan.Action = enumAction.KSACTIONSETSETTINGS;
             kScanAxControl.axKScan.Action = enumAction.KSACTIONSTART;
+        }
+
+        public void Dispose()
+        {
+            kScanAxControl.axKScan.Dispose();
         }
 
         #region Scan SDK Interface

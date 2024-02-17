@@ -1,9 +1,12 @@
-﻿using static ImageScannerPicker.Delegates;
+﻿using System;
+using static ImageScannerPicker.Delegates;
 
 namespace ImageScannerPicker
 {
     public class ImageScannerConfig
     {
+        public IntPtr WindowHandle { get; set; }
+
         public string License { get; set; }
 
         public WillBatch WillBatchDelegate { get; set; }

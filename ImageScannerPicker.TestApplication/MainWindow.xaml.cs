@@ -4,7 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Interop;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 
 namespace ImageScannerPicker.TestApplication
 {
@@ -47,42 +49,44 @@ namespace ImageScannerPicker.TestApplication
             if (!(ScannerList.SelectedItem is string deviceName)) return;
             if (string.IsNullOrEmpty(deviceName)) return;
 
+            _selectedPlugin.SetDataSource(deviceName);
+
             OpenScanner();
         }
 
         private void BrightnessSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            BrightnessLbl.Content = Convert.ToInt32(e.NewValue).ToString();
+            BrightnessLbl.Text = Convert.ToInt32(e.NewValue).ToString();
         }
 
         private void ContrastSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            ContrastLbl.Content = Convert.ToInt32(e.NewValue).ToString();
+            ContrastLbl.Text = Convert.ToInt32(e.NewValue).ToString();
         }
 
-        private void SelectScannerBtn_Click(object sender, RoutedEventArgs e)
+        private void SelectSourceBtn_Click(object sender, RoutedEventArgs e)
         {
-            OpenScannerPicker();
+            ShowSourceSelector();
         }
 
-        private void OptionBtn_Click(object sender, RoutedEventArgs e)
+        private void ShowSettingBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            ShowSettingUI();
         }
 
         private void StartScanBtn_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                if (!_selectedPlugin.IsDeviceSelected)
+                if (!_selectedPlugin.IsDataSourceOpened)
                 {
-                    OpenScannerPicker();
+                    ShowSourceSelector();
                 }
 
-                if (!_selectedPlugin.IsDeviceSelected)
+                if (!_selectedPlugin.IsDataSourceOpened)
                     return;
 
-                Console.WriteLine($"Device : {_selectedPlugin.GetDeviceNameSelected}");
+                Console.WriteLine($"Device : {_selectedPlugin.SelectedDataSourceName}");
 
                 ScanOptions options = new ScanOptions();
 
@@ -97,7 +101,7 @@ namespace ImageScannerPicker.TestApplication
 
                 options.Brightness = Convert.ToInt32(BrightnessSlider.Value);
                 options.Contrast = Convert.ToInt32(ContrastSlider.Value);
-                options.IsShowUI = TwainShowUI.IsChecked ?? false;
+                options.IsShowUI = IfShowUI.IsChecked ?? false;
 
                 _selectedPlugin.Scan(options);
             }
@@ -114,9 +118,15 @@ namespace ImageScannerPicker.TestApplication
                 FileInfo fi = new FileInfo(filePath);
 
                 ResultFileImage.Source = new BitmapImage(new Uri(filePath));
-                ResultFilePath.Content = fi.Name;
-                ResultFileSize.Content = fi.Length.ToString("#,##0");
+                ResultFilePath.Text = fi.Name;
+                ResultFileSize.Text = fi.Length.ToString("#,##0");
             }
+        }
+
+        private void ClearResultsBtn_Click(object sender, RoutedEventArgs e)
+        {
+            _resultFiles.Clear();
+            ResultList.Items.Refresh();
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -131,7 +141,6 @@ namespace ImageScannerPicker.TestApplication
         private void OnWillBatch()
         {
             Console.WriteLine($"OnWillBatch invoked.");
-            _resultFiles.Clear();
         }
 
         private void OnWillPageScan()
@@ -147,9 +156,12 @@ namespace ImageScannerPicker.TestApplication
         private void OnDonePageScan(string filePath)
         {
             Console.WriteLine($"OnDonePageScan invoked: {filePath}");
-            _resultFiles.Add(filePath);
-            ResultList.Items.Refresh();
-            ResultList.SelectedIndex = ResultList.Items.Count - 1;
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                _resultFiles.Add(filePath);
+                ResultList.Items.Refresh();
+                ResultList.SelectedIndex = ResultList.Items.Count - 1;
+            }), DispatcherPriority.Normal);
         }
 
         private void OnDidBatch()
@@ -184,9 +196,14 @@ namespace ImageScannerPicker.TestApplication
             try
             {
                 _selectedPlugin?.Dispose();
+                ScannerList.ItemsSource = null;
+
+                ShowSettingBtn.IsEnabled = false;
+                StartScanBtn.IsEnabled = false;
 
                 ImageScannerConfig config = new ImageScannerConfig
                 {
+                    WindowHandle = new WindowInteropHelper(this).Handle,
                     License = LicenseTbx.Text,
                     WillBatchDelegate = OnWillBatch,
                     WillPageScanDelegate = OnWillPageScan,
@@ -198,11 +215,11 @@ namespace ImageScannerPicker.TestApplication
 
                 _selectedPlugin = ImageScannerLoader.GetPlugin(pluginName, config);
 
-                SelectScannerBtn.IsEnabled = true;
+                SelectSourceBtn.IsEnabled = true;
             }
             catch
             {
-                SelectScannerBtn.IsEnabled = false;
+                SelectSourceBtn.IsEnabled = false;
                 return;
             }
         }
@@ -217,15 +234,15 @@ namespace ImageScannerPicker.TestApplication
             InitScannerDevice();
         }
 
-        private void OpenScannerPicker()
+        private void ShowSourceSelector()
         {
             try
             {
-                _selectedPlugin.OpenDeviceSettingWindow();
+                _selectedPlugin.ShowSourceSelector();
 
-                if (_selectedPlugin.IsDeviceSelected)
+                if (_selectedPlugin.IsDataSourceOpened)
                 {
-                    ScannerList.SelectedItem = _selectedPlugin.GetDeviceNameSelected;
+                    ScannerList.SelectedItem = _selectedPlugin.SelectedDataSourceName;
                 }
             }
             catch (Exception ex)
@@ -233,6 +250,8 @@ namespace ImageScannerPicker.TestApplication
                 Console.WriteLine(ex.ToString());
             }
         }
+
+        private void ShowSettingUI() => _selectedPlugin.ShowSettingUI();
 
         private void OpenScanner()
         {
@@ -246,14 +265,13 @@ namespace ImageScannerPicker.TestApplication
             InitBrightness();
             InitContrast();
 
-            OptionsStackPanel.IsEnabled = true;
-            OptionBtn.IsEnabled = true;
+            ShowSettingBtn.IsEnabled = true;
             StartScanBtn.IsEnabled = true;
         }
 
         private void InitScannerDevice()
         {
-            ScannerList.ItemsSource = _selectedPlugin.GetDeviceList();
+            ScannerList.ItemsSource = _selectedPlugin.DataSourceList();
         }
 
         private void InitDeviceMethod()
@@ -263,6 +281,7 @@ namespace ImageScannerPicker.TestApplication
                 DeviceMethod.ItemsSource = _selectedPlugin.DeviceMethods
                     .Select(item => new OptionItem { Code = item.ToString(), Name = item.GetName() })
                     .ToList();
+                DeviceMethod.IsEnabled = true;
             }
             catch
             {
@@ -279,6 +298,7 @@ namespace ImageScannerPicker.TestApplication
                     .ToList();
                 ColorSet.ItemsSource = list;
                 ColorSet.SelectedItem = list.FirstOrDefault(x => x.Name == "Color");
+                ColorSet.IsEnabled = true;
             }
             catch
             {
@@ -295,6 +315,7 @@ namespace ImageScannerPicker.TestApplication
                     .ToList();
                 Feeder.ItemsSource = list;
                 Feeder.SelectedItem = list.FirstOrDefault(x => x.Name == "ADF");
+                Feeder.IsEnabled = true;
             }
             catch
             {
@@ -311,6 +332,7 @@ namespace ImageScannerPicker.TestApplication
                     .ToList();
                 Duplex.ItemsSource = list;
                 Duplex.SelectedItem = list.FirstOrDefault(x => x.Name == "Single");
+                Duplex.IsEnabled = true;
             }
             catch
             {
@@ -327,6 +349,7 @@ namespace ImageScannerPicker.TestApplication
                     .ToList();
                 PaperSize.ItemsSource = list;
                 PaperSize.SelectedItem = list.FirstOrDefault(x => x.Name == "A4");
+                PaperSize.IsEnabled = true;
             }
             catch
             {
@@ -341,6 +364,7 @@ namespace ImageScannerPicker.TestApplication
                 RotateDegree.ItemsSource = _selectedPlugin.RotateDegrees
                     .Select(item => new OptionItem { Code = item.ToString(), Name = item.GetName() })
                     .ToList();
+                RotateDegree.IsEnabled = true;
             }
             catch
             {
@@ -357,6 +381,7 @@ namespace ImageScannerPicker.TestApplication
                     .ToList();
                 Resolution.ItemsSource = list;
                 Resolution.SelectedItem = list.FirstOrDefault(x => x.Name == "200");
+                Resolution.IsEnabled = true;
             }
             catch
             {
@@ -368,12 +393,13 @@ namespace ImageScannerPicker.TestApplication
         {
             try
             {
-                BrightnessLbl.Content = "0";
+                BrightnessLbl.Text = "0";
                 BrightnessSlider.Value = 0;
                 BrightnessSlider.Minimum = _selectedPlugin.Brightnesses.Min();
                 BrightnessSlider.Maximum = _selectedPlugin.Brightnesses.Max();
                 BrightnessSlider.SmallChange = 10;
                 BrightnessSlider.LargeChange = 100;
+                BrightnessSlider.IsEnabled = true;
             }
             catch
             {
@@ -385,12 +411,13 @@ namespace ImageScannerPicker.TestApplication
         {
             try
             {
-                ContrastLbl.Content = "0";
+                ContrastLbl.Text = "0";
                 ContrastSlider.Value = 0;
                 ContrastSlider.Minimum = _selectedPlugin.Contrasts.Min();
                 ContrastSlider.Maximum = _selectedPlugin.Contrasts.Max();
                 ContrastSlider.SmallChange = 10;
                 ContrastSlider.LargeChange = 100;
+                ContrastSlider.IsEnabled = true;
             }
             catch
             {
