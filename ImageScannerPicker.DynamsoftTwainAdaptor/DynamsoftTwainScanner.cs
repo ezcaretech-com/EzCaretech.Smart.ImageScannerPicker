@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ImageScannerPicker.Adaptor
 {
@@ -85,20 +86,31 @@ namespace ImageScannerPicker.Adaptor
             _twainManager = new TwainManager(config.License ?? "");
         }
 
-        public void OpenDeviceSettingWindow() =>
-            _twainManager.SelectSource();
-
-        public bool IsDeviceSelected =>
+        public bool IsDataSourceOpened =>
             !string.IsNullOrEmpty(_twainManager.CurrentSourceName);
 
-        public string GetDeviceNameSelected =>
+        public string SelectedDataSourceName =>
             _twainManager.CurrentSourceName;
 
         public bool IfGetImageInfo => true;
 
         public bool IfGetExtImageInfo => true;
 
-        public IEnumerable<string> GetDeviceList()
+        public void ShowSourceSelector() =>
+            _twainManager.SelectSource();
+
+        public void ShowSettingUI()
+        {
+        }
+        
+        public void SetDataSource(string dataSourceName)
+        {
+            for (short idx = 0; idx < _twainManager.SourceCount; idx++)
+                if (_twainManager.SourceNameItems(idx) == dataSourceName)
+                    _twainManager.SelectSourceByIndex(idx);
+        }
+
+        public IEnumerable<string> DataSourceList()
         {
             List<string> list = new List<string>();
 
@@ -124,6 +136,11 @@ namespace ImageScannerPicker.Adaptor
             _twainManager.IfDisableSourceAfterAcquire = true;
             _twainManager.IfShowUI = options.IsShowUI;
             _twainManager.AcquireImage(this);
+        }
+
+        public void Dispose()
+        {
+            _twainManager.Dispose();
         }
 
         private void SetDevice(string deviceName)
@@ -257,10 +274,5 @@ namespace ImageScannerPicker.Adaptor
             _config.ErrorDelegate?.Invoke(new Exception("Scan Error"));
 
         #endregion
-
-        public void Dispose()
-        {
-            _twainManager.Dispose();
-        }
     }
 }

@@ -27,13 +27,17 @@ namespace ImageScannerPicker
 
         IEnumerable<int> Contrasts { get; }
 
-        void OpenDeviceSettingWindow();
+        bool IsDataSourceOpened { get; }
 
-        bool IsDeviceSelected { get; }
+        string SelectedDataSourceName { get; }
 
-        string GetDeviceNameSelected { get; }
+        void ShowSourceSelector();
 
-        IEnumerable<string> GetDeviceList();
+        void ShowSettingUI();
+
+        void SetDataSource(string dataSourceName);
+
+        IEnumerable<string> DataSourceList();
 
         void Scan(ScanOptions options);
     }
