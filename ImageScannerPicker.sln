@@ -1,4 +1,3 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33403.182
@@ -8,6 +7,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageScannerPicker.TestApplication", "ImageScannerPicker.TestApplication\ImageScannerPicker.TestApplication.csproj", "{B0CFC45D-5993-4F9E-AF1E-76C9C7AD3298}"
 	ProjectSection(ProjectDependencies) = postProject
 		{304BFE28-E626-4530-9E9C-A61A867D7347} = {304BFE28-E626-4530-9E9C-A61A867D7347}
+		{343AB40D-EA17-464E-A949-BDCEC1C9FB9A} = {343AB40D-EA17-464E-A949-BDCEC1C9FB9A}
+		{91571AF1-BE05-435F-891D-C46085D77901} = {91571AF1-BE05-435F-891D-C46085D77901}
 		{ADC437B5-3B8D-45EE-9659-53DC2BBEB409} = {ADC437B5-3B8D-45EE-9659-53DC2BBEB409}
 	EndProjectSection
 EndProject
@@ -16,6 +17,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageScannerPicker.ScanAxLibAdaptor", "ImageScannerPicker.ScanAxLibAdaptor\ImageScannerPicker.ScanAxLibAdaptor.csproj", "{45E862A9-2E9C-47DF-8821-67F557BAB725}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageScannerPicker.NTwainAdaptor", "ImageScannerPicker.NTwainAdaptor\ImageScannerPicker.NTwainAdaptor.csproj", "{304BFE28-E626-4530-9E9C-A61A867D7347}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageScannerPicker.AtalasoftTwainX64Adaptor", "ImageScannerPicker.AtalasoftTwainX64Adaptor\ImageScannerPicker.AtalasoftTwainX64Adaptor.csproj", "{91571AF1-BE05-435F-891D-C46085D77901}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageScannerPicker.AtalasoftTwainX86Adaptor", "ImageScannerPicker.AtalasoftTwainX86Adaptor\ImageScannerPicker.AtalasoftTwainX86Adaptor.csproj", "{343AB40D-EA17-464E-A949-BDCEC1C9FB9A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +68,18 @@ Global
 		{304BFE28-E626-4530-9E9C-A61A867D7347}.Release|Any CPU.Build.0 = Release|Any CPU
 		{304BFE28-E626-4530-9E9C-A61A867D7347}.Release|x86.ActiveCfg = Release|Any CPU
 		{304BFE28-E626-4530-9E9C-A61A867D7347}.Release|x86.Build.0 = Release|Any CPU
+		{91571AF1-BE05-435F-891D-C46085D77901}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91571AF1-BE05-435F-891D-C46085D77901}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91571AF1-BE05-435F-891D-C46085D77901}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{91571AF1-BE05-435F-891D-C46085D77901}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91571AF1-BE05-435F-891D-C46085D77901}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91571AF1-BE05-435F-891D-C46085D77901}.Release|x86.ActiveCfg = Release|Any CPU
+		{343AB40D-EA17-464E-A949-BDCEC1C9FB9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{343AB40D-EA17-464E-A949-BDCEC1C9FB9A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{343AB40D-EA17-464E-A949-BDCEC1C9FB9A}.Debug|x86.Build.0 = Debug|Any CPU
+		{343AB40D-EA17-464E-A949-BDCEC1C9FB9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{343AB40D-EA17-464E-A949-BDCEC1C9FB9A}.Release|x86.ActiveCfg = Release|Any CPU
+		{343AB40D-EA17-464E-A949-BDCEC1C9FB9A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
