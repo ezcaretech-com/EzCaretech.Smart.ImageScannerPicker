@@ -4,6 +4,7 @@ using Dynamsoft.TWAIN.Interface;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -249,10 +250,17 @@ namespace ImageScannerPicker.Adaptor
                 Console.WriteLine(info);
                 _config.DidPageScanDelegate?.Invoke();
 
-                string filePath = Path.GetTempFileName();
-                bit.Save(filePath);
+                string tempFilePath = Path.GetTempFileName();
+                bit.Save(tempFilePath);
 
-                _config.DonePageScanDelegate?.Invoke(filePath);
+                ImageFormat format = ImageFormat.Png;
+                string outputFilePath = Path.Combine(
+                    Path.GetDirectoryName(tempFilePath),
+                    $"{Path.GetFileNameWithoutExtension(tempFilePath)}.{format.ToString().ToLower()}");
+
+                File.Move(tempFilePath, outputFilePath);
+
+                _config.DonePageScanDelegate?.Invoke(outputFilePath);
                 return true;
             }
             catch (Exception ex)
