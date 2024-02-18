@@ -2,6 +2,8 @@
 using NTwain.Data;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -47,7 +49,7 @@ namespace ImageScannerPicker.Adaptor
                     throw new ArgumentNullException(nameof(_twainSession.CurrentSource));
                 var capability = _twainSession.CurrentSource?.Capabilities.CapFeederEnabled;
                 if (!capability.IsSupported) throw new NotSupportedException(nameof(capability));
-                return new List<Feeder>() { Feeder.ADF, Feeder.FLATBED }; 
+                return new List<Feeder>() { Feeder.ADF, Feeder.FLATBED };
             }
         }
 
@@ -242,7 +244,7 @@ namespace ImageScannerPicker.Adaptor
 
             try
             {
-                tcs.Task.Start();
+                _ = tcs.Task.Result;
             }
             catch (Exception ex)
             {
@@ -255,6 +257,8 @@ namespace ImageScannerPicker.Adaptor
             _twainSession.CurrentSource?.Close();
             _twainSession.Close();
         }
+
+        #region Set capabilities
 
         private void SetColorSet(ColorSet colorSet)
         {
@@ -347,6 +351,8 @@ namespace ImageScannerPicker.Adaptor
         //ICapAutoBright
         //ICapAutoDiscardBlankPages
 
+        #endregion
+
         #region Scan SDK Interface
 
         private void OnTransferReady(object sender, TransferReadyEventArgs e)
@@ -358,6 +364,7 @@ namespace ImageScannerPicker.Adaptor
             {
                 var formats = _twainSession.CurrentSource.Capabilities.ICapImageFileFormat.GetValues();
                 var wantFormat = formats.Contains(FileFormat.Tiff) ? FileFormat.Tiff : FileFormat.Bmp;
+                Console.WriteLine(string.Join(", ", formats));
 
                 var fileSetup = new TWSetupFileXfer
                 {
@@ -371,13 +378,20 @@ namespace ImageScannerPicker.Adaptor
 
         private void OnDataTransferred(object sender, DataTransferredEventArgs e)
         {
-            string fileName = $"{Path.GetFileNameWithoutExtension(e.FileDataPath)}.{e.ImageFileFormat}";
-            string fileFullPath = Path.Combine(Path.GetDirectoryName(e.FileDataPath), fileName);
+            ImageFormat format = ImageFormat.Png;
+            string outputFilePath = Path.Combine(
+                Path.GetDirectoryName(e.FileDataPath),
+                $"{Path.GetFileNameWithoutExtension(e.FileDataPath)}.{format.ToString().ToLower()}");
 
-            File.Move(e.FileDataPath, fileFullPath);
-            _tempPaths.Add(fileFullPath);
+            using (Image image = Image.FromFile(e.FileDataPath))
+            {
+                image.Save(outputFilePath, format);
+            }
+
+            File.Delete(e.FileDataPath);
+            _tempPaths.Add(outputFilePath);
             _config.DidPageScanDelegate?.Invoke();
-            _config.DonePageScanDelegate?.Invoke(fileFullPath);
+            _config.DonePageScanDelegate?.Invoke(outputFilePath);
         }
 
         private void OnTransferCanceled(object sender, TransferCanceledEventArgs e) =>
