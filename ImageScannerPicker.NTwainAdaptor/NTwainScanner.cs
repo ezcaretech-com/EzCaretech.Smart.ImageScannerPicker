@@ -351,7 +351,7 @@ namespace ImageScannerPicker.Adaptor
         //ICapAutoBright
         //ICapAutoDiscardBlankPages
 
-        #endregion
+        #endregion Set capabilities
 
         #region Scan SDK Interface
 

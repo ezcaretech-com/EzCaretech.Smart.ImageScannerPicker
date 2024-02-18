@@ -7,7 +7,6 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ImageScannerPicker.Adaptor
 {
@@ -103,12 +102,17 @@ namespace ImageScannerPicker.Adaptor
         public void ShowSettingUI()
         {
         }
-        
+
         public void SetDataSource(string dataSourceName)
         {
             for (short idx = 0; idx < _twainManager.SourceCount; idx++)
-                if (_twainManager.SourceNameItems(idx) == dataSourceName)
+            {
+                if (_twainManager.SourceNameItems(idx).Equals(dataSourceName))
+                {
                     _twainManager.SelectSourceByIndex(idx);
+                    break;
+                }
+            }
         }
 
         public IEnumerable<string> DataSourceList()
@@ -123,7 +127,6 @@ namespace ImageScannerPicker.Adaptor
 
         public void Scan(ScanOptions options)
         {
-            SetDevice(options.DeviceName);
             _twainManager.OpenSource();
 
             SetColorSet(options.ColorSet);
@@ -144,17 +147,7 @@ namespace ImageScannerPicker.Adaptor
             _twainManager.Dispose();
         }
 
-        private void SetDevice(string deviceName)
-        {
-            for (short idx = 0; idx < _twainManager.SourceCount; idx++)
-            {
-                if (_twainManager.SourceNameItems(idx).Equals(deviceName))
-                {
-                    _twainManager.SelectSourceByIndex(idx);
-                    break;
-                }
-            }
-        }
+        #region Set capabilities
 
         private void SetColorSet(ColorSet value)
         {
@@ -231,6 +224,8 @@ namespace ImageScannerPicker.Adaptor
         private void SetBrightness(int value) => _twainManager.Brightness = value;
 
         private void SetContrast(int value) => _twainManager.Contrast = value;
+
+        #endregion Set capabilities
 
         #region Scan SDK Interface
 

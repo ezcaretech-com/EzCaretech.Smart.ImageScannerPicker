@@ -90,7 +90,6 @@ namespace ImageScannerPicker.TestApplication
 
                 ScanOptions options = new ScanOptions();
 
-                if (ScannerList.SelectedItem is string scannerName) options.DeviceName = scannerName;
                 if (DeviceMethod.SelectedItem is OptionItem item1 && Enum.Parse(typeof(DeviceMethod), item1.Code) is DeviceMethod value1) options.DeviceMethod = value1;
                 if (ColorSet.SelectedItem is OptionItem item2 && Enum.Parse(typeof(ColorSet), item2.Code) is ColorSet value2) options.ColorSet = value2;
                 if (Feeder.SelectedItem is OptionItem item3 && Enum.Parse(typeof(Feeder), item3.Code) is Feeder value3) options.Feeder = value3;
