@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33403.182
@@ -57,8 +57,8 @@ Global
 		{45E862A9-2E9C-47DF-8821-67F557BAB725}.Release|x86.Build.0 = Release|x86
 		{304BFE28-E626-4530-9E9C-A61A867D7347}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{304BFE28-E626-4530-9E9C-A61A867D7347}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{304BFE28-E626-4530-9E9C-A61A867D7347}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{304BFE28-E626-4530-9E9C-A61A867D7347}.Debug|x86.Build.0 = Debug|Any CPU
+		{304BFE28-E626-4530-9E9C-A61A867D7347}.Debug|x86.ActiveCfg = Debug|x86
+		{304BFE28-E626-4530-9E9C-A61A867D7347}.Debug|x86.Build.0 = Debug|x86
 		{304BFE28-E626-4530-9E9C-A61A867D7347}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{304BFE28-E626-4530-9E9C-A61A867D7347}.Release|Any CPU.Build.0 = Release|Any CPU
 		{304BFE28-E626-4530-9E9C-A61A867D7347}.Release|x86.ActiveCfg = Release|Any CPU

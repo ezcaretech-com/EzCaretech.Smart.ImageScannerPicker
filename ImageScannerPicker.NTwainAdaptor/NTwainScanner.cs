@@ -49,7 +49,7 @@ namespace ImageScannerPicker.Adaptor
                     throw new ArgumentNullException(nameof(_twainSession.CurrentSource));
                 var capability = _twainSession.CurrentSource?.Capabilities.CapFeederEnabled;
                 if (!capability.IsSupported) throw new NotSupportedException(nameof(capability));
-                return new List<Feeder>() { Feeder.ADF, Feeder.FLATBED }; 
+                return new List<Feeder>() { Feeder.ADF, Feeder.FLATBED };
             }
         }
 
