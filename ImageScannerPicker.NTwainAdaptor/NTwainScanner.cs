@@ -165,7 +165,7 @@ namespace ImageScannerPicker.Adaptor
             _twainSession.CurrentSource != null;
 
         public string SelectedDataSourceName =>
-            _twainSession.CurrentSource.Name;
+            _twainSession.CurrentSource?.Name;
 
         public void ShowSourceSelector()
         {
