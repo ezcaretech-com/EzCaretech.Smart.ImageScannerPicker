@@ -8,14 +8,14 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 
-namespace ImageScannerPicker.Adaptor
+namespace ImageScannerPicker.DynamicNetTwain
 {
     /// <summary>
     /// https://www.dynamsoft.com/dotnet-twain/overview/
     /// </summary>
-    public class DynamsoftTwainScanner : IImageScannerPlugin, IAcquireCallback
+    public class DynamicNetTwainScanner : IImageScannerPlugin, IAcquireCallback
     {
-        public string Name => "DynamsoftTwainScanner";
+        public string Name => "DynamicNetTwainScanner";
 
         public string Description => "Dynamic .NET TWAIN SDK plugin.";
 
@@ -80,7 +80,7 @@ namespace ImageScannerPicker.Adaptor
 
         private readonly TwainManager _twainManager;
 
-        public DynamsoftTwainScanner(ImageScannerConfig config)
+        public DynamicNetTwainScanner(ImageScannerConfig config)
         {
             _config = config;
             _twainManager = new TwainManager(config.License ?? "");

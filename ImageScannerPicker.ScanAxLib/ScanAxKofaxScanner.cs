@@ -1,5 +1,5 @@
 ﻿using AxKScanLib;
-using ImageScannerPicker.Adaptor.Properties;
+using ImageScannerPicker.ScanAxLib.Properties;
 using KScanLib;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 
-namespace ImageScannerPicker.Adaptor
+namespace ImageScannerPicker.ScanAxLib
 {
     public class ScanAxKofaxScanner : IImageScannerPlugin
     {

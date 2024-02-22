@@ -1,0 +1,3 @@
+[submodule "dotnet-twain-wia-sane-scanner"]
+	path = dotnet-twain-wia-sane-scanner
+	url = https://github.com/yushulx/dotnet-twain-wia-sane-scanner.git

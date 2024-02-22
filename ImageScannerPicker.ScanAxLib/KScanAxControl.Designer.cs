@@ -1,4 +1,4 @@
-﻿namespace ImageScannerPicker.Adaptor
+﻿namespace ImageScannerPicker.ScanAxLib
 {
     partial class KScanAxControl
     {

@@ -9,7 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace ImageScannerPicker.Adaptor
+namespace ImageScannerPicker.NTwain
 {
     /// <summary>
     /// https://github.com/soukoku/ntwain
@@ -244,6 +244,7 @@ namespace ImageScannerPicker.Adaptor
 
             try
             {
+                tcs.Task.Wait();
                 _ = tcs.Task.Result;
             }
             catch (Exception ex)
