@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.4.33403.182
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30308.118
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageScannerPicker", "ImageScannerPicker\ImageScannerPicker.csproj", "{5607499E-1BE0-403B-90E7-545E93B611F5}"
 EndProject
@@ -18,6 +18,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageScannerPicker.NTwain", "ImageScannerPicker.NTwain\ImageScannerPicker.NTwain.csproj", "{304BFE28-E626-4530-9E9C-A61A867D7347}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageScannerPicker.DynamicWebTwain", "ImageScannerPicker.DynamicWebTwain\ImageScannerPicker.DynamicWebTwain.csproj", "{F454A5B9-2F53-45B4-9E5F-61E3476E5138}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageScannerPicker.Vintasoft.TwainAdaptor", "ImageScannerPicker.Vintasoft.TwainAdaptor\ImageScannerPicker.Vintasoft.TwainAdaptor.csproj", "{6E8F3CCD-B96C-4C50-A80A-FF797CB7A812}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,6 +67,7 @@ Global
 		{304BFE28-E626-4530-9E9C-A61A867D7347}.Release|Any CPU.Build.0 = Release|Any CPU
 		{304BFE28-E626-4530-9E9C-A61A867D7347}.Release|x86.ActiveCfg = Release|x86
 		{304BFE28-E626-4530-9E9C-A61A867D7347}.Release|x86.Build.0 = Release|x86
+<<<<<<< Updated upstream
 		{F454A5B9-2F53-45B4-9E5F-61E3476E5138}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F454A5B9-2F53-45B4-9E5F-61E3476E5138}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F454A5B9-2F53-45B4-9E5F-61E3476E5138}.Debug|x86.ActiveCfg = Debug|x86
@@ -73,6 +76,24 @@ Global
 		{F454A5B9-2F53-45B4-9E5F-61E3476E5138}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F454A5B9-2F53-45B4-9E5F-61E3476E5138}.Release|x86.ActiveCfg = Release|x86
 		{F454A5B9-2F53-45B4-9E5F-61E3476E5138}.Release|x86.Build.0 = Release|x86
+=======
+		{48D0C8BB-0BA2-4354-8A4C-182BA462551F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48D0C8BB-0BA2-4354-8A4C-182BA462551F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48D0C8BB-0BA2-4354-8A4C-182BA462551F}.Debug|x86.ActiveCfg = Debug|x86
+		{48D0C8BB-0BA2-4354-8A4C-182BA462551F}.Debug|x86.Build.0 = Debug|x86
+		{48D0C8BB-0BA2-4354-8A4C-182BA462551F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48D0C8BB-0BA2-4354-8A4C-182BA462551F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48D0C8BB-0BA2-4354-8A4C-182BA462551F}.Release|x86.ActiveCfg = Release|x86
+		{48D0C8BB-0BA2-4354-8A4C-182BA462551F}.Release|x86.Build.0 = Release|x86
+		{6E8F3CCD-B96C-4C50-A80A-FF797CB7A812}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E8F3CCD-B96C-4C50-A80A-FF797CB7A812}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E8F3CCD-B96C-4C50-A80A-FF797CB7A812}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6E8F3CCD-B96C-4C50-A80A-FF797CB7A812}.Debug|x86.Build.0 = Debug|Any CPU
+		{6E8F3CCD-B96C-4C50-A80A-FF797CB7A812}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E8F3CCD-B96C-4C50-A80A-FF797CB7A812}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E8F3CCD-B96C-4C50-A80A-FF797CB7A812}.Release|x86.ActiveCfg = Release|Any CPU
+		{6E8F3CCD-B96C-4C50-A80A-FF797CB7A812}.Release|x86.Build.0 = Release|Any CPU
+>>>>>>> Stashed changes
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
