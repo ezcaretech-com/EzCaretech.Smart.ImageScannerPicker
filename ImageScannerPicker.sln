@@ -8,6 +8,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageScannerPicker.TestAppl
 	ProjectSection(ProjectDependencies) = postProject
 		{304BFE28-E626-4530-9E9C-A61A867D7347} = {304BFE28-E626-4530-9E9C-A61A867D7347}
 		{ADC437B5-3B8D-45EE-9659-53DC2BBEB409} = {ADC437B5-3B8D-45EE-9659-53DC2BBEB409}
+		{F454A5B9-2F53-45B4-9E5F-61E3476E5138} = {F454A5B9-2F53-45B4-9E5F-61E3476E5138}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageScannerPicker.DynamicNetTwain", "ImageScannerPicker.DynamicNetTwain\ImageScannerPicker.DynamicNetTwain.csproj", "{ADC437B5-3B8D-45EE-9659-53DC2BBEB409}"
@@ -15,6 +16,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageScannerPicker.ScanAxLib", "ImageScannerPicker.ScanAxLib\ImageScannerPicker.ScanAxLib.csproj", "{45E862A9-2E9C-47DF-8821-67F557BAB725}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageScannerPicker.NTwain", "ImageScannerPicker.NTwain\ImageScannerPicker.NTwain.csproj", "{304BFE28-E626-4530-9E9C-A61A867D7347}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageScannerPicker.DynamicWebTwain", "ImageScannerPicker.DynamicWebTwain\ImageScannerPicker.DynamicWebTwain.csproj", "{F454A5B9-2F53-45B4-9E5F-61E3476E5138}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,8 +63,16 @@ Global
 		{304BFE28-E626-4530-9E9C-A61A867D7347}.Debug|x86.Build.0 = Debug|x86
 		{304BFE28-E626-4530-9E9C-A61A867D7347}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{304BFE28-E626-4530-9E9C-A61A867D7347}.Release|Any CPU.Build.0 = Release|Any CPU
-		{304BFE28-E626-4530-9E9C-A61A867D7347}.Release|x86.ActiveCfg = Release|Any CPU
-		{304BFE28-E626-4530-9E9C-A61A867D7347}.Release|x86.Build.0 = Release|Any CPU
+		{304BFE28-E626-4530-9E9C-A61A867D7347}.Release|x86.ActiveCfg = Release|x86
+		{304BFE28-E626-4530-9E9C-A61A867D7347}.Release|x86.Build.0 = Release|x86
+		{F454A5B9-2F53-45B4-9E5F-61E3476E5138}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F454A5B9-2F53-45B4-9E5F-61E3476E5138}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F454A5B9-2F53-45B4-9E5F-61E3476E5138}.Debug|x86.ActiveCfg = Debug|x86
+		{F454A5B9-2F53-45B4-9E5F-61E3476E5138}.Debug|x86.Build.0 = Debug|x86
+		{F454A5B9-2F53-45B4-9E5F-61E3476E5138}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F454A5B9-2F53-45B4-9E5F-61E3476E5138}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F454A5B9-2F53-45B4-9E5F-61E3476E5138}.Release|x86.ActiveCfg = Release|x86
+		{F454A5B9-2F53-45B4-9E5F-61E3476E5138}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

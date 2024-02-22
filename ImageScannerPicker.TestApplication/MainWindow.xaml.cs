@@ -197,6 +197,12 @@ namespace ImageScannerPicker.TestApplication
                 _selectedPlugin?.Dispose();
                 ScannerList.ItemsSource = null;
 
+                if (pluginName.Equals("DynamicWebTwainScanner"))
+                {
+                    // TRIAL License, 2024-02-21 to 2024-03-22
+                    LicenseTbx.Text = "t01878AUAAHigeDb9LVVCZRqnPCUnDMC5lzBz+qlWD2puHTn0AJjBKjAB6TMw79CiZFw6KNk10L5j4o7beHRVjhY+q6IkI/rlZAOn6jtl9Z1o4OQtp9lzHsZlt7t53jSBGXjNgLbjsAEogaWWA/AOa23wAHqAHEBeDfCAy1Wcfz7tGJDy6z8bOjnZwKn6zjIgdZxo4OQtZwpIn0LxSasdFwDlydkB9ABdAlgvslNA7AjQA3QCLIY+WtAX8qgp9g==";
+                }
+
                 ShowSettingBtn.IsEnabled = false;
                 StartScanBtn.IsEnabled = false;
 
