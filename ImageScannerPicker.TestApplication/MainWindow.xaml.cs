@@ -90,7 +90,6 @@ namespace ImageScannerPicker.TestApplication
 
                 ScanOptions options = new ScanOptions();
 
-                if (ScannerList.SelectedItem is string scannerName) options.DeviceName = scannerName;
                 if (DeviceMethod.SelectedItem is OptionItem item1 && Enum.Parse(typeof(DeviceMethod), item1.Code) is DeviceMethod value1) options.DeviceMethod = value1;
                 if (ColorSet.SelectedItem is OptionItem item2 && Enum.Parse(typeof(ColorSet), item2.Code) is ColorSet value2) options.ColorSet = value2;
                 if (Feeder.SelectedItem is OptionItem item3 && Enum.Parse(typeof(Feeder), item3.Code) is Feeder value3) options.Feeder = value3;
@@ -197,6 +196,12 @@ namespace ImageScannerPicker.TestApplication
             {
                 _selectedPlugin?.Dispose();
                 ScannerList.ItemsSource = null;
+
+                if (pluginName.Equals("DynamicWebTwainScanner"))
+                {
+                    // TRIAL License, 2024-02-21 to 2024-03-22
+                    LicenseTbx.Text = "t01878AUAAHigeDb9LVVCZRqnPCUnDMC5lzBz+qlWD2puHTn0AJjBKjAB6TMw79CiZFw6KNk10L5j4o7beHRVjhY+q6IkI/rlZAOn6jtl9Z1o4OQtp9lzHsZlt7t53jSBGXjNgLbjsAEogaWWA/AOa23wAHqAHEBeDfCAy1Wcfz7tGJDy6z8bOjnZwKn6zjIgdZxo4OQtZwpIn0LxSasdFwDlydkB9ABdAlgvslNA7AjQA3QCLIY+WtAX8qgp9g==";
+                }
 
                 ShowSettingBtn.IsEnabled = false;
                 StartScanBtn.IsEnabled = false;

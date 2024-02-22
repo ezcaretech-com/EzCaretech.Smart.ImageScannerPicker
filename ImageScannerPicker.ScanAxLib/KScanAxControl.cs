@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace ImageScannerPicker.Adaptor
+namespace ImageScannerPicker.ScanAxLib
 {
     public partial class KScanAxControl : UserControl
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ImageScannerPicker.Adaptor
+namespace ImageScannerPicker.NTwain
 {
     public class StateChangedArgs : EventArgs
     {

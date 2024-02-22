@@ -34,7 +34,7 @@ namespace ImageScannerPicker
             .Where(
                 fileName =>
                 Path.GetFileName(fileName).StartsWith("ImageScannerPicker.") &&
-                Path.GetFileName(fileName).EndsWith("Adaptor.dll"))
+                Path.GetFileName(fileName).EndsWith(".dll"))
             .ToList()
             .Select(
                 fileName =>
