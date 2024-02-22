@@ -47,9 +47,13 @@ namespace ImageScannerPicker.TestApplication
         private void ScannerList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!(ScannerList.SelectedItem is string deviceName)) return;
+
             if (string.IsNullOrEmpty(deviceName)) return;
 
-            _selectedPlugin.SetDataSource(deviceName);
+            if (!deviceName.Equals(_selectedPlugin.SelectedDataSourceName))
+            {
+                _selectedPlugin.SetDataSource(deviceName);
+            }
 
             OpenScanner();
         }
@@ -276,7 +280,16 @@ namespace ImageScannerPicker.TestApplication
 
         private void InitScannerDevice()
         {
-            ScannerList.ItemsSource = _selectedPlugin.DataSourceList();
+            List<string> ds = _selectedPlugin.DataSourceList().ToList();
+            string selectedDs = _selectedPlugin.SelectedDataSourceName;
+
+            if (!ds.Contains(selectedDs))
+            {
+                ds.Add(selectedDs);
+            }
+
+            ScannerList.ItemsSource = ds;
+            ScannerList.SelectedItem = selectedDs;
         }
 
         private void InitDeviceMethod()
