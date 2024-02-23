@@ -202,6 +202,10 @@ namespace ImageScannerPicker.TestApplication
                     // TRIAL License, 2024-02-21 to 2024-03-22
                     LicenseTbx.Text = "t01878AUAAHigeDb9LVVCZRqnPCUnDMC5lzBz+qlWD2puHTn0AJjBKjAB6TMw79CiZFw6KNk10L5j4o7beHRVjhY+q6IkI/rlZAOn6jtl9Z1o4OQtp9lzHsZlt7t53jSBGXjNgLbjsAEogaWWA/AOa23wAHqAHEBeDfCAy1Wcfz7tGJDy6z8bOjnZwKn6zjIgdZxo4OQtZwpIn0LxSasdFwDlydkB9ABdAlgvslNA7AjQA3QCLIY+WtAX8qgp9g==";
                 }
+                else if (pluginName.Equals("VintasoftTwainScanner"))
+                {
+                    LicenseTbx.Text = "B9z06Bv79gGWJ/QpJAE9Vk/oQAbJ2vT+kAKtHP7OJ3SGK+NxKc6CRnhS+WBalsVk/EVcwWQoOQ8vefvhwfEJMmbkdfTcs80t3pf8kdXgE4kUfKawa6TjHHhkMTvD0b0O0KVblguU3kTFxv1381r+UUNX9tnA/YG1ByfEXO6hIoU";
+                }
 
                 ShowSettingBtn.IsEnabled = false;
                 StartScanBtn.IsEnabled = false;
