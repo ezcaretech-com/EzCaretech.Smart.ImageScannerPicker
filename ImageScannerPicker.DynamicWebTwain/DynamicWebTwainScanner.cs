@@ -69,9 +69,9 @@ namespace ImageScannerPicker.DynamicWebTwain
                 Resolution.D600,
             };
 
-        public IEnumerable<int> Brightnesses => throw new NotImplementedException();
+        public IEnumerable<int> Brightnesses => Enumerable.Range(-1000, 2001);
 
-        public IEnumerable<int> Contrasts => throw new NotImplementedException();
+        public IEnumerable<int> Contrasts => Enumerable.Range(-1000, 2001);
 
         public bool IsDataSourceOpened => _selectedDevice != null;
 
@@ -128,12 +128,14 @@ namespace ImageScannerPicker.DynamicWebTwain
 
             parameters["config"] = new Dictionary<string, object>
             {
-                { "IfShowUI", options.IsShowUI },
                 { "PixelType", ConvertFromColorSet(options.ColorSet) },
-                { "PageSize", ConvertFromPaperSize(options.PaperSize) },
-                { "Resolution", options.Resolution },
                 { "IfFeederEnabled", options.Feeder.Equals(Feeder.ADF) },
                 { "IfDuplexEnabled", options.Duplex.Equals(Duplex.BOTH) },
+                { "PageSize", ConvertFromPaperSize(options.PaperSize) },
+                { "Resolution", options.Resolution },
+                { "Brightness", options.Brightness },
+                { "Contrast", options.Contrast },
+                { "IfShowUI", options.IsShowUI },
             };
 
             _config.WillBatchDelegate?.Invoke();
