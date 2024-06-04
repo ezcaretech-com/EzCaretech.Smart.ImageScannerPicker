@@ -94,7 +94,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /y "$(TargetPath)" "$(SolutionDir)\ImageScannerPicker.TestApplication\bin\$(ConfigurationName)\"
-xcopy /y "$(ProjectDir)\VendorDLL\*.dll" "$(SolutionDir)\ImageScannerPicker.TestApplication\bin\$(ConfigurationName)\"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>
