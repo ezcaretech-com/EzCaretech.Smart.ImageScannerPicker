@@ -197,10 +197,10 @@ namespace ImageScannerPicker.TestApplication
                 _selectedPlugin?.Dispose();
                 ScannerList.ItemsSource = null;
 
-                if (pluginName.Equals("DynamicWebTwainScanner"))
+                if (pluginName.Equals("DynamicWebTwainScanner") && string.IsNullOrWhiteSpace(LicenseTbx.Text))
                 {
                     // TRIAL License, 2024-02-21 to 2024-03-22
-                    LicenseTbx.Text = "t01878AUAAHigeDb9LVVCZRqnPCUnDMC5lzBz+qlWD2puHTn0AJjBKjAB6TMw79CiZFw6KNk10L5j4o7beHRVjhY+q6IkI/rlZAOn6jtl9Z1o4OQtp9lzHsZlt7t53jSBGXjNgLbjsAEogaWWA/AOa23wAHqAHEBeDfCAy1Wcfz7tGJDy6z8bOjnZwKn6zjIgdZxo4OQtZwpIn0LxSasdFwDlydkB9ABdAlgvslNA7AjQA3QCLIY+WtAX8qgp9g==";
+                    LicenseTbx.Text = "t01868AUAAKhQe5AcnBwVIKXWm6KrIIKE26dZEqgBXy2+dAKv4KeOcFvGi5f0kUnvITKI0/bEXAleDcWuxWwPbOxSna8DEXD9crKBU+s7Veo70cDJR06RYRtaOu1O9g+4AO8N0P06HIwlkGo5AZ+Qa4MH0APUAdSrAR5wu4rr5lPOASnf/nOgq5MNnFrfWQakjhMNnHzknAPSm3TjvNoxBQTlzTkA9AC9BZB/ZJeAyBmgB+gFgFlkNEw1xCpx";
                 }
 
                 ShowSettingBtn.IsEnabled = false;
